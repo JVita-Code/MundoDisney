@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiMundoDisney", "ApiMundoDisney\ApiMundoDisney.csproj", "{B5C9D642-7884-4B85-A0A8-A38786FB94E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiMundoDisney", "ApiMundoDisney\ApiMundoDisney.csproj", "{B5C9D642-7884-4B85-A0A8-A38786FB94E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiMundoDisney.Data", "ApiMundoDisney.Data\ApiMundoDisney.Data.csproj", "{4C55C934-656F-43CA-B0A8-51D9EA8FCCBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiMundoDisney.Entities", "ApiMundoDisney.Entities\ApiMundoDisney.Entities.csproj", "{1C354FA4-7CF4-433C-8F89-F26CAFB2BE6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiMundoDisney.Repositories", "ApiMundoDisney.Repositories\ApiMundoDisney.Repositories.csproj", "{D9184EDC-8D14-4DA9-AA3D-C1CA78D7135F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{B5C9D642-7884-4B85-A0A8-A38786FB94E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5C9D642-7884-4B85-A0A8-A38786FB94E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5C9D642-7884-4B85-A0A8-A38786FB94E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C55C934-656F-43CA-B0A8-51D9EA8FCCBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C55C934-656F-43CA-B0A8-51D9EA8FCCBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C55C934-656F-43CA-B0A8-51D9EA8FCCBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C55C934-656F-43CA-B0A8-51D9EA8FCCBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C354FA4-7CF4-433C-8F89-F26CAFB2BE6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C354FA4-7CF4-433C-8F89-F26CAFB2BE6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C354FA4-7CF4-433C-8F89-F26CAFB2BE6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C354FA4-7CF4-433C-8F89-F26CAFB2BE6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9184EDC-8D14-4DA9-AA3D-C1CA78D7135F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9184EDC-8D14-4DA9-AA3D-C1CA78D7135F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9184EDC-8D14-4DA9-AA3D-C1CA78D7135F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9184EDC-8D14-4DA9-AA3D-C1CA78D7135F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
