@@ -11,6 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ApiMundoDisney.Data;
+using ApiMundoDisney.Repositories;
+using ApiMundoDisney.MundoDisneyMapper;
 
 namespace ApiMundoDisney
 {
@@ -26,8 +30,17 @@ namespace ApiMundoDisney
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddMvc(o => o.AllowEmptyInputInBodyModelBinding = true);
+
+            services.AddDbContext<ApplicationDbContext>(Options => Options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddAutoMapper(typeof(MundoDisneyMappers));
 
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiMundoDisney", Version = "v1" });
