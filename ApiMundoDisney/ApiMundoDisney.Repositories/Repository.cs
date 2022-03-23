@@ -15,7 +15,7 @@ namespace ApiMundoDisney.Repositories
         public Repository(ApplicationDbContext context)
         {
             _context = context;
-        }
+        }        
 
         public int Count(Expression<Func<T, bool>> where)
         {

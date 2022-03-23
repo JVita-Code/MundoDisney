@@ -11,6 +11,7 @@ namespace ApiMundoDisney.Repositories
     {
         private ApplicationDbContext _context;
         private IPersonajeRepository _personajeRepository;
+        private IUsuarioRepository _usuarioRepository;
 
         public IPersonajeRepository Personajes
         {
@@ -22,6 +23,18 @@ namespace ApiMundoDisney.Repositories
                 }
 
                 return _personajeRepository;
+            }
+        }
+
+        public IUsuarioRepository Usuarios
+        {
+            get
+            {
+                if(_usuarioRepository == null)
+                {
+                    _usuarioRepository = new UsuarioRepository(_context);
+                }
+                return _usuarioRepository;
             }
         }
 

@@ -9,6 +9,7 @@ namespace ApiMundoDisney.Repositories
     public interface IUnitOfWork
     {
         IPersonajeRepository Personajes { get; }
+        IUsuarioRepository Usuarios { get; }
 
         void Save();
     }

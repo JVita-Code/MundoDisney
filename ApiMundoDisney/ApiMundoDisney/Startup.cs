@@ -15,6 +15,11 @@ using Microsoft.EntityFrameworkCore;
 using ApiMundoDisney.Data;
 using ApiMundoDisney.Repositories;
 using ApiMundoDisney.MundoDisneyMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+//using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ApiMundoDisney
 {
@@ -30,14 +35,26 @@ namespace ApiMundoDisney
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddMvc(o => o.AllowEmptyInputInBodyModelBinding = true);
-
             services.AddDbContext<ApplicationDbContext>(Options => Options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
             services.AddAutoMapper(typeof(MundoDisneyMappers));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
 
             services.AddControllers();
 
@@ -62,6 +79,7 @@ namespace ApiMundoDisney
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

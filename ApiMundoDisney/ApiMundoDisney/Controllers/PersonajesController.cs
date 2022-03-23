@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace ApiMundoDisney.Controllers
 {
-    [Route("api/characters")]
+    [Route("api/characters")]    
     [ApiController]
     public class PersonajesController : ControllerBase
     {       
@@ -38,7 +38,9 @@ namespace ApiMundoDisney.Controllers
         }
 
 
-        [HttpGet("{personajeId:int}", Name ="GetPersonaje")]
+        //[HttpGet("detalle/{personajeId:int}", Name ="GetPersonaje")]
+        [Route("detalle/{personajeId}")]
+        [HttpGet]
         public IActionResult GetPersonaje(int personajeId)
         {
             var personaje = _unitOfWork.Personajes.GetById(personajeId);
@@ -53,6 +55,7 @@ namespace ApiMundoDisney.Controllers
             return Ok(personajeDto);
         }
 
+        [Route("create")]
         [HttpPost]
         public IActionResult CreatePersonaje([FromBody] PersonajeDto personajeDto)
         {
@@ -70,8 +73,10 @@ namespace ApiMundoDisney.Controllers
             return Ok();            
         }
 
-        [HttpDelete("{personajeId:int}", Name = "RemovePersonaje")]        
-        public IActionResult RemovePersonaje(int personajeId)
+        //[HttpDelete("{personajeId:int}", Name = "DeletePersonaje")]
+        [Route("delete/{personajeId}")]
+        [HttpDelete]       
+        public IActionResult DeletePersonaje(int personajeId)
         {
             var personaje = _unitOfWork.Personajes.GetById(personajeId);
 
@@ -82,7 +87,9 @@ namespace ApiMundoDisney.Controllers
             return Ok();
         }
 
-        [HttpPatch("{personajeId:int}", Name = "UpdatePersonaje")]
+        //[HttpPatch("detalle/{personajeId:int}", Name = "UpdatePersonaje")]
+        [Route("detalle/{personajeId}")]
+        [HttpPatch]
         public IActionResult UpdatePersonaje([FromBody] PersonajeUpdateDto personajeUpdateDto, int personajeId)
         {
             if (personajeUpdateDto.PersonajeId != personajeId || personajeUpdateDto == null)
