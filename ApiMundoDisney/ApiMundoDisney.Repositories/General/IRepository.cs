@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace ApiMundoDisney.Repositories
 {
     public interface IRepository<T> where T : class
-    {
+    {      
         IEnumerable<T> GetAll();
         void Create(T entidad);
         void Delete(T entidad);
         void Update(T entidad);
         int Count(Expression<Func<T, bool>> where);
-        T GetById(int id);
+        T Get(int id);
         IEnumerable<T> FindBy(ParametrosDeConsulta<T> parametrosDeQuery);
         IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
         void Save();

@@ -11,7 +11,13 @@ namespace ApiMundoDisney.MundoDisneyMapper
             CreateMap<Personaje, PersonajeDto>().ReverseMap();
             CreateMap<Personaje, PersonajeListadoDto>().ReverseMap();
             CreateMap<Personaje, PersonajeUpdateDto>().ReverseMap();
-            CreateMap<Usuario, UsuarioDto>().ReverseMap();            
+            CreateMap<Personaje, PersonajeCreateDto>().ReverseMap();
+            CreateMap<Usuario, UsuarioDto>().ReverseMap();
+
+            CreateMap<Pelicula, PeliculaDto>().ReverseMap();
+            CreateMap<Pelicula, PeliculaListadoDto>().ReverseMap();
+            CreateMap<Pelicula, PeliculaUpdateDto>().ReverseMap();
+            CreateMap<Pelicula, PeliculaCreateDto>().ReverseMap();
         }
     }
 }

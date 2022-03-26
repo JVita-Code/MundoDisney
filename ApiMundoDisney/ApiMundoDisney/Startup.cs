@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 //using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ApiMundoDisney
@@ -40,6 +41,7 @@ namespace ApiMundoDisney
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IPeliculaRepository, PeliculaRepository>();
 
             services.AddAutoMapper(typeof(MundoDisneyMappers));
 
@@ -58,10 +60,39 @@ namespace ApiMundoDisney
 
             services.AddControllers();
 
+            ////soluciona object cycle
+            services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiMundoDisney", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer",
+                    new OpenApiSecurityScheme
+                    {
+                        Description = "Autenticación JWT (Bearer)",
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "Bearer"
+                    });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        }, new List<string>()
+                    }
+                  });
             });
+
+            services.AddCors();
+
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,13 +109,17 @@ namespace ApiMundoDisney
 
             app.UseRouting();
 
+
             app.UseAuthorization();
             app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
         }
     }
 }

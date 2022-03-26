@@ -4,14 +4,16 @@ using ApiMundoDisney.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ApiMundoDisney.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220323194612_cambioEnModelos")]
+    partial class cambioEnModelos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,8 +31,8 @@ namespace ApiMundoDisney.Data.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RutaImagen")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RutaImagen")
+                        .HasColumnType("int");
 
                     b.HasKey("GeneroId");
 
@@ -50,7 +52,7 @@ namespace ApiMundoDisney.Data.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GeneroId")
+                    b.Property<int>("GeneroId")
                         .HasColumnType("int");
 
                     b.Property<string>("RutaImagen")
@@ -133,7 +135,9 @@ namespace ApiMundoDisney.Data.Migrations
                 {
                     b.HasOne("ApiMundoDisney.Entities.Genero", "Genero")
                         .WithMany("Peliculas")
-                        .HasForeignKey("GeneroId");
+                        .HasForeignKey("GeneroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Genero");
                 });

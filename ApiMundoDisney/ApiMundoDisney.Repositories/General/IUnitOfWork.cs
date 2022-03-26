@@ -10,6 +10,7 @@ namespace ApiMundoDisney.Repositories
     {
         IPersonajeRepository Personajes { get; }
         IUsuarioRepository Usuarios { get; }
+        IPeliculaRepository Peliculas { get; }
 
         void Save();
     }

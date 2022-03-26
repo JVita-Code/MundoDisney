@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApiMundoDisney.Repositories
+namespace ApiMundoDisney.Repositories.General
 {
-    public interface IPersonajeRepository : IRepository<Personaje>
+    public interface IGeneroRepository : IRepository<Genero>
     {
-        public Personaje GetPersonajeConPeliculas(int id);
+
     }
 }

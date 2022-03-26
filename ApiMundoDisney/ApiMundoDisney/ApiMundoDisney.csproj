@@ -22,4 +22,9 @@
     <ProjectReference Include="..\ApiMundoDisney.Repositories\ApiMundoDisney.Repositories.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\imagenes\" />
+    <Folder Include="wwwroot\imagenesPeliculas\" />
+  </ItemGroup>
+
 </Project>

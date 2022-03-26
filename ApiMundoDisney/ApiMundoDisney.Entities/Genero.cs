@@ -10,9 +10,9 @@ namespace ApiMundoDisney.Entities
     public class Genero
     {
         [Key]
-        public int GeneroId { get; set; }
+        public int GeneroId { get; set; } //cambiar set por init?
         public string Nombre { get; set; }
-        public int RutaImagen { get; set; }
+        public string RutaImagen { get; set; }
         public virtual ICollection<Pelicula> Peliculas { get; set; }
     }
 }

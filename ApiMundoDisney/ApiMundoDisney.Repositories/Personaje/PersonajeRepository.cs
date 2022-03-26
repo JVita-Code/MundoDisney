@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ApiMundoDisney.Data;
 using ApiMundoDisney.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiMundoDisney.Repositories
 {
@@ -16,9 +17,11 @@ namespace ApiMundoDisney.Repositories
 
         }
 
-        //public ApplicationDbContext Context
-        //{
-        //    get { return Context as ApplicationDbContext; }
-        //}
+        public Personaje GetPersonajeConPeliculas(int id)
+        {
+            var peliculaConPersonajes = _context.Personajes.Include(p => p.Peliculas).FirstOrDefault(p => p.PersonajeId == id);
+
+            return peliculaConPersonajes;
+        }
     }
 }

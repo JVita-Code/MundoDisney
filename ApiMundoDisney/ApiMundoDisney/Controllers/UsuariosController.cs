@@ -2,6 +2,7 @@
 using ApiMundoDisney.Entities.Dtos;
 using ApiMundoDisney.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,8 @@ using System.Text;
 
 namespace ApiMundoDisney.Controllers
 {
+    //[Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/auth")]
     [ApiController]
     public class UsuariosController : ControllerBase
@@ -49,14 +52,15 @@ namespace ApiMundoDisney.Controllers
         [HttpGet("{usuarioId:int}", Name = "GetUsuario")]
         public IActionResult GetUsuario(int usuarioId)
         {
-            var usuario = _unitOfWork.Usuarios.GetById(usuarioId);
+            var usuario = _unitOfWork.Usuarios.Get(usuarioId);
 
-            if (usuario == null)
+            if (usuario is null)
             {
                 return NotFound();
             }
 
             var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
+
             return Ok(usuarioDto);
         }
 

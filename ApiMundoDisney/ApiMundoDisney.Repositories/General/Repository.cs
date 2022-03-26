@@ -42,8 +42,8 @@ namespace ApiMundoDisney.Repositories
             return _context.Set<T>().ToList();
         }
 
-        public T GetById(int id)
-        {
+        public T Get(int id)
+        {           
             return _context.Set<T>().Find(id);
         }
 
@@ -60,6 +60,6 @@ namespace ApiMundoDisney.Repositories
         public void Update(T entidad)
         {
             _context.Set<T>().Update(entidad);
-        }
+        }        
     }
 }

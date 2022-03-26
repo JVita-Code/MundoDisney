@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ApiMundoDisney.Repositories
 {
-    public interface IPersonajeRepository : IRepository<Personaje>
+    public interface IPeliculaRepository : IRepository<Pelicula>
     {
-        public Personaje GetPersonajeConPeliculas(int id);
+        public Pelicula GetPeliculaConPersonajes(int id);
     }
 }
