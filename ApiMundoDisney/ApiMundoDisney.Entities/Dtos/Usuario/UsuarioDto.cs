@@ -10,5 +10,6 @@ namespace ApiMundoDisney.Entities.Dtos
     {
         public string UsuarioA { get; set; }
         public byte[] PasswordHash { get; set; }
+        //public string Email { get; set; }
     }
 }

@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
+using ApiMundoDisney.Services;
 //using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ApiMundoDisney
@@ -37,6 +38,10 @@ namespace ApiMundoDisney
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(Options => Options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
+            services.AddScoped<IPeliculaService, PeliculaService>();
+            services.AddScoped<IPersonajeService, PersonajeService>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();

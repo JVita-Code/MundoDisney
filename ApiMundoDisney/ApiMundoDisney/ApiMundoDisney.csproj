@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ApiMundoDisney.Data\ApiMundoDisney.Data.csproj" />
     <ProjectReference Include="..\ApiMundoDisney.Repositories\ApiMundoDisney.Repositories.csproj" />
+    <ProjectReference Include="..\ApiMundoDisney.Services\ApiMundoDisney.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using ApiMundoDisney.Entities;
 using ApiMundoDisney.Entities.Dtos;
 using ApiMundoDisney.Repositories;
+using ApiMundoDisney.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -20,29 +21,29 @@ namespace ApiMundoDisney.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPeliculaRepository _peliculaRepository;
+        //private readonly IPeliculaRepository _peliculaRepository;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IPeliculaService _peliculaService;
 
-        public PeliculasController(IMapper mapper, IUnitOfWork unitOfWork, IPeliculaRepository peliculaRepository, IWebHostEnvironment hostingEnvironment)
+        public PeliculasController(IMapper mapper, IUnitOfWork unitOfWork, IPeliculaRepository peliculaRepository, IWebHostEnvironment hostingEnvironment, IPeliculaService peliculaService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _peliculaRepository = peliculaRepository;
+            //_peliculaRepository = peliculaRepository;
             _hostingEnvironment = hostingEnvironment;
+            _peliculaService = peliculaService;
         }
 
         [HttpGet]
         public IActionResult GetPeliculas()
         {
-            var listadoPeliculas = _unitOfWork.Peliculas.GetAll();
-    
-            var listadoPeliculasDto = new List<PeliculaListadoDto>();
-    
-            foreach (var pelicula in listadoPeliculas)
+            var listadoPeliculasDto = _peliculaService.GetPeliculas();
+
+            if (listadoPeliculasDto is null)
             {
-                listadoPeliculasDto.Add(_mapper.Map<PeliculaListadoDto>(pelicula));
+                return BadRequest();
             }
-    
+     
             return Ok(listadoPeliculasDto);
         }
     
@@ -50,68 +51,48 @@ namespace ApiMundoDisney.Controllers
         [HttpGet]
         public IActionResult GetPelicula(int peliculaId)
         {
-            var pelicula = _peliculaRepository.GetPeliculaConPersonajes(peliculaId);
-    
+            var pelicula = _peliculaService.GetPelicula(peliculaId);
+
             if (pelicula is null)
             {
                 return NotFound();
             }
-    
-            var peliculaDto = _mapper.Map<PeliculaDto>(pelicula);
-    
-            return Ok(peliculaDto);
+
+            return Ok(pelicula);
         }
               
         [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost]
-        public IActionResult CreatePelicula([FromForm] PeliculaCreateDto peliculaCreateDto)
+        public IActionResult CreatePelicula([FromForm] PeliculaCreateDto peliculaCreateDto, IFormFileCollection archivos)
         {
-            if (peliculaCreateDto is null)
+            var resultado = _peliculaService.CreatePelicula(peliculaCreateDto, archivos);
+
+            if (resultado.Resultado == Resultado.Error)
             {
                 return BadRequest(ModelState);
             }
-           
-            var archivo = peliculaCreateDto.Foto;
-            string rutaPrincipal = _hostingEnvironment.WebRootPath;
-            var archivos = HttpContext.Request.Form.Files;
+            
+            return Ok();
 
-            if (archivo.Length > 0)
-            {
-                var nombreImagen = Guid.NewGuid().ToString();
-                var subidas = Path.Combine(rutaPrincipal, @"imagenesPeliculas");
-                var extension = Path.GetExtension(archivos[0].FileName);
+            // debería ser Created con 201...
 
-                using (var fileStreams = new FileStream(Path.Combine(subidas, nombreImagen + extension), FileMode.Create))
-                {
-                    archivos[0].CopyTo(fileStreams);
-                }
-
-                peliculaCreateDto.RutaImagen = @"\imagenesPeliculas\" + nombreImagen + extension;
-            }
-
-            var pelicula = _mapper.Map<Pelicula>(peliculaCreateDto);
-    
-            _unitOfWork.Peliculas.Create(pelicula);
-    
-            _unitOfWork.Save();
-    
-            var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-    
-            var locationUri = baseUrl + "/" + "api/movies" + $"/{pelicula.PeliculaId}";
-    
-            return Created(locationUri, peliculaCreateDto);             
+            ////var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+            ////var locationUri = baseUrl + "/" + "api/movies" + $"/{pelicula.PeliculaId}";
+            //return Created(baseUrl, locationUri);            
         }
-    
+
         [Route("{peliculaId}")]
         [HttpDelete]
         public IActionResult DeletePelicula(int peliculaId)
         {
-            var pelicula = _unitOfWork.Peliculas.Get(peliculaId);
-    
-            _unitOfWork.Peliculas.Delete(pelicula);
-    
-            _unitOfWork.Save();
-  
+
+            var resultado = _peliculaService.DeletePelicula(peliculaId);
+
+            if (resultado.Resultado == Resultado.NoEncontrado)
+            {
+                return NotFound();
+            }
+
             return NoContent();
         }
     
@@ -119,17 +100,14 @@ namespace ApiMundoDisney.Controllers
         [HttpPatch]
         public IActionResult UpdatePelicula([FromBody] PeliculaUpdateDto peliculaUpdateDto, int peliculaId)
         {
-            if (peliculaUpdateDto.PeliculaId != peliculaId || peliculaUpdateDto is null)
+            var resultado = _peliculaService.UpdatePelicula(peliculaUpdateDto, peliculaId);
+
+            if (resultado.Resultado == Resultado.Error)
             {
                 return BadRequest();
             }
-    
-            var pelicula = _mapper.Map<Pelicula>(peliculaUpdateDto);
-    
-            _unitOfWork.Peliculas.Update(pelicula);
-    
-            _unitOfWork.Save();    
-    
+
+            //return Ok(resultado);
             return NoContent();
         }
     }

@@ -15,5 +15,6 @@ namespace ApiMundoDisney.Entities.Dtos
         [Required(ErrorMessage = "La contraseña es obligatoria")]
         [StringLength(10, MinimumLength = 4, ErrorMessage = "La contraseña debe tener entre 4 y 10 caracteres")]
         public string Password { get; set; }
+        //public string Email { get; set; }
     }
 }

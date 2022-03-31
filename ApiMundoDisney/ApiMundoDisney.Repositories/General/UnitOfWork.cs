@@ -13,45 +13,10 @@ namespace ApiMundoDisney.Repositories
         private IPersonajeRepository _personajeRepository;
         private IUsuarioRepository _usuarioRepository;
         private IPeliculaRepository _peliculaRepository;
-
-        public IPersonajeRepository Personajes
-        {
-            get
-            {
-                if (_personajeRepository == null)
-                {
-                    _personajeRepository = new PersonajeRepository(_context);
-                }
-
-                return _personajeRepository;
-            }
-        }
-
-        public IUsuarioRepository Usuarios
-        {
-            get
-            {
-                if(_usuarioRepository == null)
-                {
-                    _usuarioRepository = new UsuarioRepository(_context);
-                }
-                
-                return _usuarioRepository;
-            }
-        }
-
-        public IPeliculaRepository Peliculas
-        {
-            get
-            {
-                if (_peliculaRepository == null)
-                {
-                    _peliculaRepository = new PeliculaRepository(_context);
-                }
-
-                return _peliculaRepository;
-            }
-        }
+       
+        public IPersonajeRepository Personajes => _personajeRepository = _personajeRepository ?? new PersonajeRepository(_context);
+        public IUsuarioRepository Usuarios => _usuarioRepository = _usuarioRepository ?? new UsuarioRepository(_context);
+        public IPeliculaRepository Peliculas => _peliculaRepository = _peliculaRepository ?? new PeliculaRepository(_context);
 
 
         public UnitOfWork(ApplicationDbContext context)

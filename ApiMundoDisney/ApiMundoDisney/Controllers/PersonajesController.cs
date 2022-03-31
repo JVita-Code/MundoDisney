@@ -2,6 +2,7 @@
 using ApiMundoDisney.Entities;
 using ApiMundoDisney.Entities.Dtos;
 using ApiMundoDisney.Repositories;
+using ApiMundoDisney.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -22,91 +23,74 @@ namespace ApiMundoDisney.Controllers
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IPersonajeService _personajeService;
 
-        public PersonajesController(IMapper mapper, IUnitOfWork unitOfWork, IWebHostEnvironment hostingEnvironment)
+        public PersonajesController(IMapper mapper, IUnitOfWork unitOfWork, IWebHostEnvironment hostingEnvironment, IPersonajeService personajeService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _hostingEnvironment = hostingEnvironment;
+            _personajeService = personajeService;
         }
 
         [HttpGet]
         public IActionResult GetPersonajes()
         {
-            var listadoPersonajes = _unitOfWork.Personajes.GetAll();
+            var resultado = _personajeService.GetPersonajes();
 
-            var listadoPersonajesDto = new List<PersonajeListadoDto>();
-
-            foreach (var personaje in listadoPersonajes)
+            if (resultado is null)
             {
-                listadoPersonajesDto.Add(_mapper.Map<PersonajeListadoDto>(personaje));
-            }           
+                return BadRequest();
+            }
 
-            return Ok(listadoPersonajesDto);
+            return Ok(resultado);
         }
 
         [Route("{personajeId}")]
         [HttpGet]
         public IActionResult GetPersonaje(int personajeId)
         {
-            var personaje = _unitOfWork.Personajes.GetPersonajeConPeliculas(personajeId);
+            var resultado = _personajeService.GetPersonaje(personajeId);
 
-            if (personaje is null)
+            if (resultado is null)
             {
                 return NotFound();
             }
 
-            var personajeDto = _mapper.Map<PersonajeDto>(personaje);            
-
-            return Ok(personajeDto);
+            return Ok(resultado);
         }
-       
+
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost]
-        public IActionResult CreatePersonaje([FromForm] PersonajeCreateDto personajeDto)
+        public IActionResult CreatePersonaje([FromForm] PersonajeCreateDto personajeDto, IFormFileCollection archivos)
         {
-            if (personajeDto == null)
+            var resultado = _personajeService.CreatePersonaje(personajeDto, archivos);
+
+            if (resultado.Resultado == Resultado.Error)
             {
                 return BadRequest(ModelState);
             }
 
-            /*subida de archivos*/
-            var archivo = personajeDto.Foto;
-            string rutaPrincipal = _hostingEnvironment.WebRootPath;
-            var archivos = HttpContext.Request.Form.Files;
+            return Ok();
 
-            if (archivo.Length > 0)
-            {
-                //Nueva imagen
-                var nombreImagen = Guid.NewGuid().ToString();
-                var subidas = Path.Combine(rutaPrincipal, @"imagenes");
-                var extension = Path.GetExtension(archivos[0].FileName);
+            // debería ser Created con 201.
 
-                using (var fileStreams = new FileStream(Path.Combine(subidas, nombreImagen + extension), FileMode.Create))
-                {
-                    archivos[0].CopyTo(fileStreams);
-                }
-                personajeDto.RutaImagen = @"\imagenes\" + nombreImagen + extension;
-            }
-
-            var personaje = _mapper.Map<Personaje>(personajeDto);
-
-            _unitOfWork.Personajes.Create(personaje);
-            
-            _unitOfWork.Save();
-
-            return Ok();            
+            ////var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+            ////var locationUri = baseUrl + "/" + "api/movies" + $"/{pelicula.PeliculaId}";
+            //return Created(baseUrl, locationUri); 
         }
-       
+
         [Route("{personajeId}")]
         [HttpDelete]       
         public IActionResult DeletePersonaje(int personajeId)
         {
-            var personaje = _unitOfWork.Personajes.Get(personajeId);
-
-            _unitOfWork.Personajes.Delete(personaje);
-
-            _unitOfWork.Save();
-
+            var resultado = _personajeService.DeletePersonaje(personajeId);
+            
+            if (resultado.Resultado == Resultado.NoEncontrado)
+            {
+                return NotFound();                
+            }
+            
             return NoContent();
         }
 
@@ -114,17 +98,14 @@ namespace ApiMundoDisney.Controllers
         [HttpPatch]
         public IActionResult UpdatePersonaje([FromBody] PersonajeUpdateDto personajeUpdateDto, int personajeId)
         {
-            if (personajeUpdateDto.PersonajeId != personajeId || personajeUpdateDto == null)
+            var resultado = _personajeService.UpdatePersonaje(personajeUpdateDto, personajeId);
+            
+            if (resultado.Resultado == Resultado.Error)
             {
                 return BadRequest();
             }
 
-            var personaje = _mapper.Map<Personaje>(personajeUpdateDto);
-
-            _unitOfWork.Personajes.Update(personaje);
-
-            _unitOfWork.Save();
-
+            //return Ok(resultado);
             return NoContent();
         }
     }
