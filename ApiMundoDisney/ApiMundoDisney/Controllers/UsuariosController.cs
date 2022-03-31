@@ -15,8 +15,7 @@ using System.Security.Claims;
 using System.Text;
 
 namespace ApiMundoDisney.Controllers
-{
-    //[Authorize]
+{    
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/auth")]
     [ApiController]
@@ -99,9 +98,9 @@ namespace ApiMundoDisney.Controllers
             {
             new Claim(ClaimTypes.NameIdentifier, usuarioDesdeRepo.UsuarioId.ToString()),
             new Claim(ClaimTypes.Name, usuarioDesdeRepo.UsuarioA.ToString())
-        };
+            };
 
-            //Generación de token
+            //token
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
             var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 

@@ -135,10 +135,14 @@ namespace ApiMundoDisney.Services
                     return personajeDto;
                 }
 
+                var mensaje = "No se ha encontrado el personaje";
+
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                var mensaje = ex.Message;
+
                 return null;
             }
         }
@@ -164,9 +168,9 @@ namespace ApiMundoDisney.Services
                 return null;
                 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                var mensaje = "Ha ocurrido un error al intentar obtener el listado de Personajes";
+                var mensaje = ex.Message;
 
                 return null;
             }

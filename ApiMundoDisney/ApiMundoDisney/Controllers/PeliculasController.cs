@@ -20,16 +20,14 @@ namespace ApiMundoDisney.Controllers
     public class PeliculasController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
-        //private readonly IPeliculaRepository _peliculaRepository;
+        private readonly IUnitOfWork _unitOfWork;        
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IPeliculaService _peliculaService;
 
-        public PeliculasController(IMapper mapper, IUnitOfWork unitOfWork, IPeliculaRepository peliculaRepository, IWebHostEnvironment hostingEnvironment, IPeliculaService peliculaService)
+        public PeliculasController(IMapper mapper, IUnitOfWork unitOfWork, IWebHostEnvironment hostingEnvironment, IPeliculaService peliculaService)
         {
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
-            //_peliculaRepository = peliculaRepository;
+            _unitOfWork = unitOfWork;            
             _hostingEnvironment = hostingEnvironment;
             _peliculaService = peliculaService;
         }
@@ -85,7 +83,6 @@ namespace ApiMundoDisney.Controllers
         [HttpDelete]
         public IActionResult DeletePelicula(int peliculaId)
         {
-
             var resultado = _peliculaService.DeletePelicula(peliculaId);
 
             if (resultado.Resultado == Resultado.NoEncontrado)

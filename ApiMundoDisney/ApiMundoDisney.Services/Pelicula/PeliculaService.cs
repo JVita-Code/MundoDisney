@@ -96,34 +96,28 @@ namespace ApiMundoDisney.Services
 
                         respuesta.Mensaje = "Operación exitosa.";
 
-                        respuesta.Resultado = Resultado.Ok;
-
-                        return respuesta;
+                        respuesta.Resultado = Resultado.Ok;                        
                     }
                     catch (Exception ex)
                     {
                         respuesta.Mensaje = ex.Message;
 
-                        respuesta.Resultado = Resultado.Error;
-
-                        return respuesta;
+                        respuesta.Resultado = Resultado.Error;                        
                     }
+
+                    return respuesta;
                 }
 
                 respuesta.Mensaje = "No se ha encontrado la película.";
 
-                respuesta.Resultado = Resultado.NoEncontrado;
-
-                return respuesta;
+                respuesta.Resultado = Resultado.NoEncontrado;                
             }
 
             return respuesta;
         }
 
         public PeliculaDto GetPelicula(int peliculaId)
-        {
-            
-            
+        {                      
             try
             {               
                 if (ExistePelicula(peliculaId))
@@ -134,12 +128,15 @@ namespace ApiMundoDisney.Services
 
                     return peliculaDto;
                 }
+
+                var mensaje = "No se ha encontrado la película";
                 
                 return null;
             }
             catch (Exception)
             {
                 var mensaje = "Ha ocurrido un error al intentar obtener la película";
+
                 return null;
             }            
         }
@@ -152,12 +149,12 @@ namespace ApiMundoDisney.Services
             {
                 return false;
             }
+
             return true;
         }
 
         public List<PeliculaListadoDto> GetPeliculas()
         {
-
             try
             {
                 var listadoPeliculas = _unitOfWork.Peliculas.GetAll();
@@ -178,6 +175,8 @@ namespace ApiMundoDisney.Services
             }
             catch (Exception ex)
             {
+                var mensaje = ex.Message;
+
                 return null;
             }            
         }
